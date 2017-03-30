@@ -1,0 +1,96 @@
+Report                                                                 farrugiam
+================================================================================
+
+This report investigates scheduling algorithm performance measured by average 
+waiting time experienced by processes in a series of randomly generated process 
+data files.
+
+
+Algorithms:
+===========
+
+The first algorithms tested were the first-come, first-serve (fcfs) and multi-
+level feedback (multi(3)) schedulers as described in the project specification.
+
+These algorithms were compared to three new scheduling algorithms implemented 
+for the purpose of this report:
+
+- multi(10):
+	Variation of multi-level feedback scheduler, with 10 levels and increasing 
+	quanta.
+
+- linux:
+	Simplified version of the O(1) scheduling algorithm from the linux kernel; 
+	maintains arrays of 10 'active' and 10'expired' queues with different 
+	priorities. New processes start in the highest priority active queue. 
+	Processes that complete their quanta are inserted into an expired queue 
+	with reduced priority. When all active queues are empty, the arrays swap.
+
+- sjf:
+	Standard non-preemptive shortest job first scheduling algorithm.
+
+
+Process data files:
+===================
+
+	The process data files used for this investigation consisted of 50 randomly 
+	generated jobs, each either 'user' jobs (with a random burst time up to 128 
+	steps) or 'batch' jobs (with burst times between 128 and 1024 steps).
+
+
+Experiment:
+===========
+
+	The distribution of user jobs and batch jobs was varied, and the resulting 
+	average waiting time was measured for each algorithm. In each case, four 
+	process data files were trialled and the results averaged.
+
+		+===========+=========+=========+=========+==========+==========+
+		|           |              chance of 'batch' job                |
+		+           +         +         +         +          +          +
+		| algorithm |  0%     |  25%    |  50%    |  75%     |  100%    |
+		+===========+=========+=========+=========+==========+==========+
+		| fcfs      | 1454.49 | 4689.01 | 7632.12 | 9711.58  | 15405.65 |
+		+-----------+---------+---------+---------+----------+----------+
+		| multi(3)  | 1896.58 | 3704.63 | 8122.41 | 11063.59 | 23295.65 |
+		+-----------+---------+---------+---------+----------+----------+
+		| multi(10) | 1817.32 | 3618.80 | 7742.03 | 10834.52 | 22140.01 |
+		+-----------+---------+---------+---------+----------+----------+
+		| linux     | 1888.32 | 3679.38 | 8085.11 | 11053.03 | 23288.55 |
+		+-----------+---------+---------+---------+----------+----------+
+		| sjf       | 960.99  | 1855.34 | 4122.46 | 5646.68  | 11858.49 |
+		+-----------+---------+---------+---------+----------+----------+
+
+Discussion:
+===========
+
+	For each distribution, the preemptive schedulers (multi(*) and linux) 
+	suffered in comparison to their non-preemptive counterparts. fcfs 
+	significantly outperformed each preemptive algorithm, and sjf performed 
+	even better.
+
+	sjf's dominance over fcfs can be explained by considering their behaviour 
+	upon encountering batch processes. When fcfs would chose to begin running 
+	the long process to completion, sjf will let any existing shorter jobs run 
+	first, reducing overall average waiting time.
+
+	Despite its impressive performance, accurate burst times are not usually 
+	known in advance, making sjf an impractical scheduler.
+
+	In contrast, preemptive schedulers share CPU time between multiple 
+	competing jobs, causing all jobs to make slow but consistent progress 
+	towards completion.
+
+	multi(10) slightly outperforms multi(3) in each case. This may be due to 
+	the tendency for batch process to gravitate towards lower-priority, higher 
+	quantum queues. In multi(10) this can start to make a significant 
+	difference, whereas a maximum quantum of 8 in multi(3) is small compared to 
+	the burst time of most jobs generated, meaning most jobs are treated 
+	similarly.
+
+	linux performed comparably to multi(3), possibly also due to low quanta 
+	(compared to typical burst times). In this simplified implementation, only 
+	10 priorities exist, with quanta ranging from 30 to 10. In the actual linux 
+	O(1) scheduler, there are 140 priority levels, and heuristics are used to 
+	rank processes.
+                                                     500 words [wordcounter.net]

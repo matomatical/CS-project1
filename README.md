@@ -16,11 +16,11 @@ they handled different processor loads in comparison to one another.
 
 ## core components
 
-`main.c`
+#### main.c
 
 main function which reads command line inputs and starts the simulation
 
-#### `simulation.c`
+#### simulation.c
 
 contains the actual simulation loop logic, working through a list 
 of jobs and simulating their execution as processes on an imaginary CPU

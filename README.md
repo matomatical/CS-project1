@@ -3,12 +3,15 @@
 From the README submitted with my 2016 Computer Systems project (see specification.pdf for the task):
 
 > Hi there!
+> 
 > My submission for this project is rather expansive! I've tried to keep things
-modular and extensible, and the result was a few more `.c` files than expected
+modular and extensible, and the result was a few more `.c` files than expected.
+>
 > I hope you'll also enjoy my report; since I made scheduling algorithms so
 flexible I decided to experiment with a few different algorithms to see how
 they handled different processor loads in comparison to one another.
 > Here's a breif overview of the components of my simulation.
+> 
 > Matt (`farrugiam`) 694719
 
 ## core components

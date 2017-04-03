@@ -186,6 +186,8 @@ static void siftdown(heap_t *h, int hid){
             //cascade child up one spot
             h->items[hid].key  = h->items[child].key;
             h->items[hid].data = h->items[child].data;
+            
+            hid = child;
     }
 
     // finally, paste item we're sifting down into position reached
